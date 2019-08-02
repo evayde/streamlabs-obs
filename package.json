@@ -6,7 +6,7 @@
   "version": "0.17.0-preview.1",
   "main": "main.js",
   "engines": {
-    "node": ">= 10 < 12",
+    "node": ">= 12 < 13",
     "yarn": ">= 1.5.2"
   },
   "scripts": {
@@ -66,7 +66,7 @@
     "archiver": "2.1.1",
     "aws-sdk": "^2.344.0",
     "crash-handler": "https://github.com/stream-labs/crash-handler/releases/download/v0.0.37/iojs-v5.0.4-crash-handler.tar.gz",
-    "electron-log": "^3.0.4",
+    "electron-log": "^3.0.7",
     "electron-window-state": "5.0.3",
     "extract-zip": "^1.6.7",
     "facemask-plugin": "https://s3-us-west-2.amazonaws.com/faces-internal.streamlabs.com/facemask-plugin-deployment/facemask-plugin-0.9.1.tar.gz",
@@ -119,8 +119,8 @@
     "css-loader": "2.1.0",
     "devtron": "1.4.0",
     "dotenv": "8.0.0",
-    "electron": "5.0.6",
-    "electron-builder": "20.38.5",
+    "electron": "^6.0.0",
+    "electron-builder": "21.2.0",
     "electron-devtools-installer": "2.2.4",
     "file-loader": "1.1.11",
     "fuse.js": "3.2.1",

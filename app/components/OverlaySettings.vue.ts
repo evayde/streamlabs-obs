@@ -32,8 +32,8 @@ export default class OverlaySettings extends Vue {
     this.customizationService.setMediaBackupOptOut(value);
   }
 
-  saveOverlay() {
-    const chosenPath = electron.remote.dialog.showSaveDialog({
+  async saveOverlay() {
+    const chosenPath = await electron.remote.dialog.showSaveDialog({
       filters: [{ name: 'Overlay File', extensions: ['overlay'] }],
     });
 
@@ -43,10 +43,10 @@ export default class OverlaySettings extends Vue {
     this.message = '';
 
     // TODO: Expose progress to the user
-    this.overlaysPersistenceService.saveOverlay(chosenPath).then(() => {
+    this.overlaysPersistenceService.saveOverlay(chosenPath.filePath).then(() => {
       this.busy = false;
       this.message = $t('Successfully saved %{filename}', {
-        filename: path.parse(chosenPath).base,
+        filename: path.parse(chosenPath.filePath).base,
       });
     });
   }

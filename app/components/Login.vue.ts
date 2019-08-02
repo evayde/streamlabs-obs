@@ -17,19 +17,18 @@ export default class Login extends Vue {
     return this.userService.username;
   }
 
-  logout() {
-    electron.remote.dialog.showMessageBox(
+  async logout() {
+    const index = await electron.remote.dialog.showMessageBox(
       {
         title: $t('Confirm'),
         message: $t('Are you sure you want to log out?'),
         buttons: [$t('Yes'), $t('No')],
       },
-      index => {
-        if (index === 0) {
-          this.userService.logOut();
-        }
-      },
     );
+
+    if (index.response === 0) {
+      this.userService.logOut();
+    }
   }
 
   login() {

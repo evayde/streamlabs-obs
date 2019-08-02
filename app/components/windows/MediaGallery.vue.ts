@@ -169,33 +169,31 @@ export default class MediaGallery extends Vue {
 
   async handleDelete() {
     if (this.selectedFile) {
-      electron.remote.dialog.showMessageBox(
+      const ok = await electron.remote.dialog.showMessageBox(
         electron.remote.getCurrentWindow(),
         {
           type: 'warning',
           message: $t('Are you sure you want to delete this file? This action is irreversable.'),
           buttons: [$t('Cancel'), $t('OK')],
         },
-        async ok => {
-          if (!ok || !this.selectedFile) return;
-          this.galleryInfo = await this.mediaGalleryService.deleteFile(this.selectedFile);
-          this.selectedFile = null;
-        },
       );
+
+      if (!ok.response || !this.selectedFile) return;
+      this.galleryInfo = await this.mediaGalleryService.deleteFile(this.selectedFile);
+      this.selectedFile = null;
     }
   }
 
   async handleDownload() {
-    electron.remote.dialog.showSaveDialog(
+    const filename = await electron.remote.dialog.showSaveDialog(
       electron.remote.getCurrentWindow(),
       { defaultPath: this.selectedFile.fileName },
-      async filename => {
-        if (!this.selectedFile) return;
-        this.setBusy($t('Downloading...'));
-        await this.mediaGalleryService.downloadFile(filename, this.selectedFile);
-        this.setNotBusy();
-      },
     );
+
+    if (!this.selectedFile) return;
+    this.setBusy($t('Downloading...'));
+    await this.mediaGalleryService.downloadFile(filename.filePath, this.selectedFile);
+    this.setNotBusy();
   }
 
   async upload(filepaths: string[]) {

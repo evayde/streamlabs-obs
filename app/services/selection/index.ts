@@ -112,7 +112,7 @@ export class SelectionService extends StatefulService<ISelectionState> {
   setParent: (folderId: string) => void;
 
   @shortcut('Delete')
-  remove() {
+  async remove() {
     const lastSelected = this.getLastSelected();
 
     if (!lastSelected) return;
@@ -124,18 +124,17 @@ export class SelectionService extends StatefulService<ISelectionState> {
         ? $t('Are you sure you want to remove these %{count} items?', { count: selectionLength })
         : $t('Are you sure you want to remove %{sceneName}?', { sceneName: name });
 
-    electron.remote.dialog.showMessageBox(
+    const ok = await electron.remote.dialog.showMessageBox(
       electron.remote.getCurrentWindow(),
       {
         message,
         type: 'warning',
         buttons: [$t('Cancel'), $t('OK')],
       },
-      ok => {
-        if (!ok) return;
-        this.editorCommandsService.executeCommand('RemoveNodesCommand', this.getActiveSelection());
-      },
     );
+
+    if (!ok.response) return;
+    this.editorCommandsService.executeCommand('RemoveNodesCommand', this.getActiveSelection());
   }
 
   openEditTransform() {

@@ -186,7 +186,7 @@ if (!gotTheLock) {
 
     mainWindowState.manage(mainWindow);
 
-    mainWindow.setMenu(null);
+    mainWindow.removeMenu();
 
     // wait until devtools will be opened and load app into window
     // it allows to start application with clean cache

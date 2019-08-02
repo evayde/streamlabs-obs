@@ -290,8 +290,8 @@ export class Selection implements ISceneItemActions {
     return this.selection.rotate(deg);
   }
 
-  remove(): void {
-    return this.selection.remove();
+  async remove() {
+    await this.selection.remove();
   }
 
   /**

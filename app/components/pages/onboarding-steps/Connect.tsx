@@ -24,13 +24,13 @@ export default class Connect extends TsxComponent<{ continue: () => void }> {
       platform,
       () => (this.loadingState = false),
       () => (this.loadingState = true),
-      result => {
+      async (result) => {
         // Currently we do not have special handling for generic errors
         if (result === EPlatformCallResult.Success || result === EPlatformCallResult.Error) {
           this.continue();
         } else if (result === EPlatformCallResult.TwitchTwoFactor) {
           this.loadingState = false;
-          electron.remote.dialog.showMessageBox(
+          const buttonIndex = await electron.remote.dialog.showMessageBox(
             {
               type: 'error',
               message: $t(
@@ -40,12 +40,11 @@ export default class Connect extends TsxComponent<{ continue: () => void }> {
               title: $t('Twitch Authentication Error'),
               buttons: [$t('Enable Two Factor Authentication'), $t('Dismiss')],
             },
-            buttonIndex => {
-              if (buttonIndex === 0) {
-                electron.remote.shell.openExternal('https://twitch.tv/settings/security');
-              }
-            },
           );
+
+          if (buttonIndex.response === 0) {
+            electron.remote.shell.openExternal('https://twitch.tv/settings/security');
+          }
         }
       },
     );

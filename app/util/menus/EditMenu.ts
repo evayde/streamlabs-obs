@@ -134,14 +134,14 @@ export class EditMenu extends Menu {
       if (this.source && this.source.getPropertiesManagerType() === 'widget') {
         this.append({
           label: $t('Export Widget'),
-          click: () => {
-            const chosenPath = electron.remote.dialog.showSaveDialog({
+          click: async () => {
+            const chosenPath = await electron.remote.dialog.showSaveDialog({
               filters: [{ name: 'Widget File', extensions: ['widget'] }],
             });
 
             if (!chosenPath) return;
 
-            this.widgetsService.saveWidgetFile(chosenPath, selectedItem.sceneItemId);
+            this.widgetsService.saveWidgetFile(chosenPath.filePath, selectedItem.sceneItemId);
           },
         });
       }
@@ -162,7 +162,7 @@ export class EditMenu extends Menu {
       this.append({
         label: $t('Remove'),
         accelerator: 'Delete',
-        click: () => {
+        click: async () => {
           // if scene items are selected than remove the selection
           if (this.options.showSceneItemMenu) {
             this.selectionService.remove();
@@ -182,20 +182,19 @@ export class EditMenu extends Menu {
               );
             } else {
               // remove a global source
-              electron.remote.dialog.showMessageBox(
+              const ok = await electron.remote.dialog.showMessageBox(
                 electron.remote.getCurrentWindow(),
                 {
                   message: $t('This source will be removed from all of your scenes'),
                   type: 'warning',
                   buttons: [$t('Cancel'), $t('OK')],
                 },
-                ok => {
-                  if (!ok) return;
-                  this.editorCommandsService.executeCommand(
-                    'RemoveSourceCommand',
-                    this.source.sourceId,
-                  );
-                },
+              );
+
+              if (!ok.response) return;
+              this.editorCommandsService.executeCommand(
+                'RemoveSourceCommand',
+                this.source.sourceId,
               );
             }
           }

@@ -1,5 +1,5 @@
 import { Service } from 'services/core/service';
-import electron from 'electron';
+import electron, { IpcRendererEvent } from 'electron';
 import { Subscription } from 'rxjs';
 import { IJsonRpcRequest, IJsonRpcResponse, IJsonRpcEvent } from 'services/api/jsonrpc';
 import { Inject } from 'services/core/injector';
@@ -12,7 +12,7 @@ const { ipcRenderer } = electron;
  */
 export class IpcServerService extends Service {
   servicesEventsSubscription: Subscription;
-  requestHandler: Function;
+  requestHandler: (event: IpcRendererEvent, ...args: any[]) => void;
 
   @Inject() private internalApiService: InternalApiService;
 

@@ -99,9 +99,9 @@ export class FacemasksService extends PersistentStatefulService<Interfaces.IFace
     return obs.ModuleFactory.modules().includes('facemask-plugin.dll');
   }
 
-  notifyFailure() {
+  async notifyFailure() {
     this.SET_ACTIVE(false);
-    const ok = electron.remote.dialog.showMessageBox(
+    const ok = await electron.remote.dialog.showMessageBox(
       electron.remote.getCurrentWindow(),
       {
         type: 'warning',
@@ -109,12 +109,11 @@ export class FacemasksService extends PersistentStatefulService<Interfaces.IFace
         detail: $t('Click Retry to try again'),
         buttons: ['Retry', 'OK'],
       },
-      btnIndex => {
-        if (btnIndex === 0) {
-          this.startup();
-        }
-      },
     );
+
+    if (ok.response === 0) {
+      this.startup();
+    }
   }
 
   notifyPluginMissing() {
